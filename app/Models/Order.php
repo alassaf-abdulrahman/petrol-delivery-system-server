@@ -20,6 +20,9 @@ class Order extends Model
         'quantity',
         'status',
         'deliveryLocation',
+        'orderTime',
+        'amount',
+        'orderDate'
     ];
 
     public function customer()

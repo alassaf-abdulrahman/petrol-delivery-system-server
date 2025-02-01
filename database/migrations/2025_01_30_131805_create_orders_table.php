@@ -18,6 +18,9 @@ return new class extends Migration {
             $table->string("quantity");
             $table->string("status");
             $table->string("deliveryLocation");
+            $table->string("orderTime");
+            $table->string("orderDate");
+            $table->decimal("amount", 8, 2)->nullable();
 
             $table->foreign("customerID")->references("customerID")->on("customers")->onDelete("cascade");
             $table->foreign("driverID")->references("driverID")->on("drivers")->onDelete("cascade");
