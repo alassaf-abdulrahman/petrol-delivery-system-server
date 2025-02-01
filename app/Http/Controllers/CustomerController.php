@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     // Place Fuel Order
-    public function PlaceFuelOrder(Request $request)
+    public function placeFuelOrder(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'fuelType' => 'required|string|in:petrol,diesel,gas',
@@ -60,7 +60,7 @@ class CustomerController extends Controller
     }
 
     // Track Fuel Order
-    public function TrackFuelOrder(Request $request)
+    public function trackFuelOrder(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'orderID' => 'required|numeric',
@@ -88,7 +88,7 @@ class CustomerController extends Controller
     }
 
     // Make Payment
-    public function MakePayment(Request $request)
+    public function makePayment(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'orderID' => 'required|numeric',

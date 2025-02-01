@@ -15,8 +15,46 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    // login
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        if (!$user || !Hash::check($request->input('password'), $user->password)) {
+            return response()->json([
+                'message' => 'Invalid email or password'
+            ], 401);
+        }
+
+        if ($user->role == 'admin') {
+            $roleAccount = Admin::where('userID', $user->userID)->first();
+        } elseif ($user->role == 'driver') {
+            $roleAccount = Driver::where('userID', $user->userID)->first();
+        } elseif ($user->role == 'customer') {
+            $roleAccount = Customer::where('userID', $user->userID)->first();
+        }
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'roleAccount' => $roleAccount
+        ], 200);
+    }
+
     // Create a new user account
-    public function CreateUserAccount(Request $request)
+    public function createUserAccount(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -98,7 +136,7 @@ class UserController extends Controller
     }
 
     // Update a user account
-    public function UpdateUserAccount(Request $request, $userID)
+    public function updateUserAccount(Request $request, $userID)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -167,6 +205,4 @@ class UserController extends Controller
             ], 500);
         }
     }
-
-
 }

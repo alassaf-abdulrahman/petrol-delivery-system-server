@@ -41,6 +41,4 @@ class DriverController extends Controller
             'order' => $order
         ], 200);
     }
-
-
 }
