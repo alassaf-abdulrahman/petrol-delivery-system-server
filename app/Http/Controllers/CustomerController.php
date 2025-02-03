@@ -16,7 +16,7 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'fuelType' => 'required|string|in:petrol,diesel,gas',
             'quantity' => 'required|numeric|min:1',
-            'deliveryLocation' => 'required|string|max:255',
+            'deliveryLocation' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -93,17 +93,16 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'orderID' => 'required|numeric',
             'amount' => 'required|numeric|min:1',
-            'paymentMethod' => 'required|string|in:credit_card,paypal',
-            'paymentReference' => 'required|string|max:255',
-            'cardNumber' => 'required|string|size:20',
-            'expiryDate' => 'required|string|size:20',
+            'paymentMethod' => 'required|string|in:visa,paypal',
+            'cardNumber' => 'required|string|max:20',
+            'expiryDate' => 'required|string|max:20',
             'cvv' => 'required|string|size:3',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'error' => $validator->errors()
             ], 422);
         }
 
@@ -116,7 +115,8 @@ class CustomerController extends Controller
 
             if (!$fuelOrder) {
                 return response()->json([
-                    'message' => 'Fuel order not found'
+                    'message' => 'Fuel order not found',
+                    'error' => ""
                 ], 404);
             }
 
@@ -135,6 +135,7 @@ class CustomerController extends Controller
             // Update the fuel order
             // $fuelOrder->status = 'paid';
             $fuelOrder->amount = $request->input('amount');
+            $fuelOrder->status = "paid";
             $fuelOrder->save();
 
             // Commit the transaction
@@ -142,6 +143,7 @@ class CustomerController extends Controller
 
             return response()->json([
                 'message' => 'Payment made successfully',
+                'order' => $fuelOrder
             ], 200);
         } catch (\Exception $e) {
             // An error occurred; rollback the transaction
@@ -152,5 +154,16 @@ class CustomerController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function getOrders(Request $request)
+    {
+        $customerID = $request->input("customerID");
+
+        $orders = Order::where("customerID", "=", $customerID)->get();
+        return response()->json([
+            "message" => "Orders Retrieved Successfully",
+            "orders" => $orders
+        ]);
     }
 }

@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Driver;
 use App\Models\Order;
 use App\Models\Report;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    public function getDrivers(Request $request)
+    {
+        $drivers = Driver::all();
+        return response()->json([
+            'message' => "Drivers Retrieved Successfully",
+            'drivers' => $drivers
+        ]);
+    }
+
     // Fuels Orders List
     public function getFuelsOrdersList()
     {
-        $orders = Order::get()->where('status', 'pending');
+        $orders = Order::where('status', 'pending')->get();
         return response()->json([
             'orders' => $orders
         ], 200);
@@ -49,7 +59,7 @@ class AdminController extends Controller
     public function generateMonthlyReport(Request $request)
     {
         $month = $request->input('month');
-        $orders = Order::where('status', '=', 'delivered')->where('orderDate', 'like', "%" . $month . "%")->get();
+        $orders = Order::where('status', '=', 'paid')->where('orderDate', 'like', "%" . $month . "%")->get();
         $totalAmount = 0;
         foreach ($orders as $order) {
             $totalAmount += $order->amount;

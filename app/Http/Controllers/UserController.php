@@ -49,7 +49,8 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'user' => $user,
-            'roleAccount' => $roleAccount
+            'roleAccount' => $roleAccount,
+            'password' => $request->input("password")
         ], 200);
     }
 
@@ -136,8 +137,9 @@ class UserController extends Controller
     }
 
     // Update a user account
-    public function updateUserAccount(Request $request, $userID)
+    public function updateUserAccount(Request $request)
     {
+        $userID = request()->input("userID");
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $userID . ',userID',

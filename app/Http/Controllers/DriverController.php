@@ -10,7 +10,9 @@ class DriverController extends Controller
     // Get Fuel Orders Assigned to Driver
     public function getFuelOrders(Request $request)
     {
-        $orders = Order::get()->where('driverID', $request->input('driverID'));
+        $orders = Order::where('driverID', $request->input('driverID'))
+            ->where('status', '=', "Pending Driver Confirmation")
+            ->orWhere('status', '=', "Delivering")->get();
         return response()->json([
             'orders' => $orders
         ], 200);
