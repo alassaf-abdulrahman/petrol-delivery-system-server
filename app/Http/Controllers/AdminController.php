@@ -69,7 +69,7 @@ class AdminController extends Controller
             'month' => $month,
             'totalOrders' => count($orders),
             'revenue' => $totalAmount,
-            'details' => "Monthly report for month " . $month . " of this year is generated successfully and the total revenue is " . $totalAmount,
+            'details' => "Monthly report for " . $month . " is generated successfully and the total revenue is " . $totalAmount,
             'path' => "reports/" . $month . ".pdf"
         ]);
 
