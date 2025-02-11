@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -165,5 +166,39 @@ class CustomerController extends Controller
             "message" => "Orders Retrieved Successfully",
             "orders" => $orders
         ]);
+    }
+
+    public function submitFeedback(Request $request)
+    {
+        try {
+            // Create the feedback
+            $feedback = Feedback::create([
+                "userID" => $request->input("userID"),
+                "feedback" => $request->input("feedback"),
+                "submittedBy" => "Customer"
+            ]);
+
+            // Check if feedback was created successfully
+            if ($feedback) {
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Feedback submitted successfully",
+                    "data" => [
+                        "feedbackID" => $feedback->id, // Return the ID of the created feedback
+                        "customerID" => $feedback->customerID,
+                        "feedback" => $feedback->feedback
+                    ]
+                ], 201); // 201 Created status code for successful resource creation
+            } else {
+                throw new Exception("Failed to create feedback");
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions
+            return response()->json([
+                "status" => "error",
+                "message" => "Failed to submit feedback",
+                "error" => $e->getMessage() // Include error message for debugging (remove in production)
+            ], 500); // 500 Internal Server Error for unexpected errors
+        }
     }
 }

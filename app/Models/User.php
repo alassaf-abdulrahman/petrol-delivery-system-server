@@ -35,4 +35,9 @@ class User extends Model
     {
         return $this->hasOne(Customer::class, 'userID');
     }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class, "feedbackID");
+    }
 }

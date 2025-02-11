@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Driver;
+use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\Report;
 use Illuminate\Http\Request;
@@ -77,5 +78,24 @@ class AdminController extends Controller
             'message' => 'Monthly report generated successfully',
             'report' => $report
         ], 201);
+    }
+
+    public function getFeedbacks(Request $request)
+    {
+        try {
+            $feedbacks = Feedback::get();
+            return response()->json([
+                "status" => "success",
+                "message" => "Feedbacks retrieved successfully",
+                "count" => $feedbacks->count(),
+                "feedbacks" => $feedbacks
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Failed to retrieve feedbacks",
+                "error" => $e->getMessage()
+            ], 500);
+        }
     }
 }

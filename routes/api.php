@@ -20,12 +20,14 @@ Route::prefix('customer')->group(function () {
     Route::get('/tarck-fuel-order', CustomerController::class . '@trackFuelOrder');
     Route::post('/make-payment', CustomerController::class . '@makePayment');
     Route::post('/view-orders', CustomerController::class . '@getOrders');
+    Route::post('/submit-feedback', CustomerController::class . '@submitFeedback');
 });
 
 Route::prefix('driver')->group(function () {
     Route::post('/fuel-orders', DriverController::class . '@getFuelOrders');
     Route::put('/accept-fuel-order', DriverController::class . '@acceptFuelOrder');
     Route::put('/confirm-delivery', DriverController::class . '@confirmFuelDelivery');
+    Route::post('/submit-feedback', DriverController::class . '@submitFeedback');
 });
 
 Route::prefix('admin')->group(function () {
@@ -34,4 +36,5 @@ Route::prefix('admin')->group(function () {
     Route::put('/reject-order', AdminController::class . '@rejectFuelOrder');
     Route::post('/generate-report', AdminController::class . '@generateMonthlyReport');
     Route::get('/drivers', AdminController::class . '@getDrivers');
+    Route::get('/get-feedbacks', AdminController::class . '@getFeedbacks');
 });
